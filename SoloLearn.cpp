@@ -1,21 +1,86 @@
-// SoloLearn.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+
 
 #include <iostream>
 using namespace std;
-int main()
+
+int atoi_ex(const char* s); //declaring function prototype with two paramters//
+
+
+int main() //Main to test function//
 {
-    std::cout << "Hello World!\n ";
-    std::cout << "Next line";
+    const char sd[] = "-999999999";
+    int output = atoi_ex(sd);
+    cout << output ;
+ 
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+int atoi_ex(const char* s)//defining function with two parameters//
+{
+    int characterSize = 0; //Variable used to find the length of character
+    int outputSign = 1;    //Variable used to output the sign of the output be it + or -
+    int results = 0;       //Variable used for function return
+    int elementPosition = 0;  
+    int base = 1;// 16^0 ==1 
+   
+    while (s[characterSize] != '\0') // Finds the length of the character string //
+    {
+        characterSize++;
+    }
+    
+    if (s[0] == '0' && s[1] == 'x')
+    {
+        for (int i = characterSize-1; i>=0; i--) //loop through the character string starting from the back
+        {
+            if (s[i] >= 'a' && s[i] <= 'f')
+            {
+                results = results + ((s[i] - 87) * base);  //converting calues from a - f to decimal using their ascii values
+                base = base * 16;
+            }
+            else if (s[i] >= '0' && s[i] <= '9')
+            {
+                results = results + ((s[i] - '0') * base); //converting values from 0-9 in hex to decimal
+                base = base * 16;
+            }
+        } 
+    }
+    else 
+    {
+        if (*s == '\0') //If the character contains invalid characters, the function returns 0
+        {
+            cout << "Error in conversion" << endl;
+            return 0;
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+        }
+        for (int i = 0; s[i] != '\0'; ++i)
+        {
+           
+            if (s[i] == ' ')   //Skips whitepaces and increments element position 
+            {
+                elementPosition++;
+            }
+
+            if (s[i] == '-')   //If the current element position has a negative sign then the output will have a negative sign
+            {
+                outputSign = -1 * outputSign;
+                elementPosition += 1;
+
+            }
+            if (s[i] == '+')   //If the current element position has a positive sign then the output will be positive
+            {
+                outputSign = +1 * outputSign;
+                elementPosition += 1;
+
+            }
+
+            if (s[elementPosition] >= '0' && s[elementPosition] <= '9')    // Checks that the input is valid//
+            {
+                results = (10 * results) + (s[elementPosition] - '0'); // Converts string to integer by subtracting the values by their ascii deccimal values
+                elementPosition++; //increment counter
+            }
+            
+        }
+    }
+    return results * outputSign;
+}
+
+
